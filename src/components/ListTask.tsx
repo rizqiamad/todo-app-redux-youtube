@@ -2,32 +2,30 @@ import { FaCheckCircle, FaPencilAlt, FaRegCircle, FaTrashAlt } from "react-icons
 import { ITask } from "../App"
 import { KeyboardEvent, useState } from "react"
 import { PiUploadSimple } from "react-icons/pi"
+import { useDispatch } from "react-redux"
+import { deleteTask, editTask, setCheck } from "../features/task"
 
 interface IProps {
   item: ITask
   listIdx: number
-  tasks: ITask[]
-  setTasks: (param: ITask[]) => void
 }
 
-export default function ListTask({ item, listIdx, tasks, setTasks }: IProps) {
-  const [editedTask, setEditedTask] = useState<string>(tasks[listIdx].task)
+export default function ListTask({ item, listIdx }: IProps) {
+  const [editedTask, setEditedTask] = useState<string>(item.task)
   const [isEditing, setIsEditing] = useState<boolean>(false)
+  const dispatch = useDispatch()
 
   const handleCheck = () => {
-    tasks[listIdx].isChecked = !tasks[listIdx].isChecked
-    setTasks([...tasks])
+    dispatch(setCheck(listIdx))
   }
 
   const handleDeleteTask = () => {
-    const newTasks = tasks.filter((_, idx) => idx !== listIdx)
-    setTasks(newTasks)
+    dispatch(deleteTask(listIdx))
   }
 
   const handleConfirmEdit = () => {
     if (editedTask !== '') {
-      tasks[listIdx].task = editedTask
-      setTasks([...tasks])
+      dispatch(editTask({ newTask: editedTask, idx: listIdx }))
       setIsEditing(!isEditing)
     }
   }

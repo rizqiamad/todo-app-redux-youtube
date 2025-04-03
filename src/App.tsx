@@ -1,5 +1,8 @@
-import { KeyboardEvent, useEffect, useState } from "react"
+import { KeyboardEvent, useState } from "react"
 import ListTask from "./components/ListTask"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "./app/store"
+import { addTask } from "./features/task"
 
 export interface ITask {
   task: string
@@ -7,12 +10,13 @@ export interface ITask {
 }
 
 export default function App() {
-  const [tasks, setTasks] = useState<ITask[]>(JSON.parse(localStorage.getItem("tasks") || '[]'))
+  const dispatch = useDispatch()
+  const tasks = useSelector((state: RootState) => state.tasks)
   const [currentTask, setCurrentTask] = useState<string>("")
 
   const handleAddTask = () => {
     if (currentTask !== '') {
-      setTasks([...tasks, { task: currentTask, isChecked: false }])
+      dispatch(addTask({ task: currentTask, isChecked: false }))
       setCurrentTask("")
     }
   }
@@ -22,10 +26,6 @@ export default function App() {
       handleAddTask()
     }
   }
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks))
-  }, [tasks])
 
   return (
     <main className="flex justify-center items-center h-screen bg-gradient-to-r from-indigo-500 to-purple-600">
@@ -52,8 +52,6 @@ export default function App() {
                 key={idx}
                 item={item}
                 listIdx={idx}
-                tasks={tasks}
-                setTasks={setTasks}
               />
             )
           })}
