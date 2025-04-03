@@ -8,7 +8,7 @@ This project is a simple project built on react and tailwindcss. With simple cru
 - macOS, Windows (including WSL), and Linux are supported.
 - [npm](https://www.npmjs.com/)
 
-## iNSTALLATION
+## INSTALLATION
 
   ```bash
   cd todo-app-youtube
